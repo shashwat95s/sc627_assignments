@@ -78,3 +78,37 @@ def VectorToPoint(q, T):
     if theta < 0:
         theta += 2*pi
     return Vx, Vy, theta
+
+
+def attPotential(q, g):
+    D = DistancePointToPoint(q, g)
+    if D > 2:
+        Vx = 1.6*(g[0]-q[0])/D
+        Vy = 1.6*(g[1]-q[1])/D
+    else:
+        Vx = 0.8*(g[0]-q[0])
+        Vy = 0.8*(g[1]-q[1])
+    return Vx, Vy
+
+
+def repPotential(q, P):
+    [D, w, [a, b]] = computeDistancePointToPolygon(q, P)
+    if D > 2:
+        Vx = 0
+        Vy = 0
+    else:
+        Vx = 0.8*(0.5-(1/D))*(a-q[0])/(D**3)
+        Vy = 0.8*(0.5-(1/D))*(b-q[1])/(D**3)
+    return Vx, Vy
+
+
+def normalise(q):
+    s = (q[0]**2)+(q[1]**2)
+    if s == 0:
+        Vx = 0
+        Vy = 0
+    else:
+        Vx = q[0]/(s**0.5)
+        Vy = q[1]/(s**0.5)
+    theta = atan2(Vy, Vx)
+    return Vx, Vy, theta
